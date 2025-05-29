@@ -15,7 +15,7 @@ export const App = () => {
 		<div className={styles.app}>
 			<div>
 				{todos.map(({ id, title, completed }) => (
-					<Todo key={id} title={title} comleted={completed} />
+					<Todo key={id} title={title} completed={completed} />
 				))}
 			</div>
 		</div>
