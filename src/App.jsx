@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import { Todo } from './components/todo';
+import styles from './App.module.css';
 
-import "./app.modules.css";
+export const App = () => {
+	const [todos, setTodos] = useState([]);
 
-function App() {
-  const [count, setCount] = useState(0);
+	useEffect(() => {
+		fetch('https://jsonplaceholder.typicode.com/todos')
+			.then((todosData) => todosData.json())
+			.then((loadedTodos) => setTodos(loadedTodos));
+	}, []);
 
-  return (
-    <>
-      <div></div>
-    </>
-  );
-}
-
-export default App;
+	return (
+		<div className={styles.app}>
+			<div>
+				{todos.map(({ id, title, completed }) => (
+					<Todo key={id} title={title} comleted={completed} />
+				))}
+			</div>
+		</div>
+	);
+};
