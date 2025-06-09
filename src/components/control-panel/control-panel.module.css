@@ -1,0 +1,31 @@
+.controlPanel {
+	display: flex;
+	border-bottom: 2px solid #444;
+	height: 40px;
+	padding: 10px;
+}
+.search {
+	width: 100%;
+}
+.sortingButton {
+	width: 23px;
+	height: 23px;
+	display: flex;
+	justify-content: center;
+	margin: 0 10px;
+}
+.addButton {
+	width: 25px;
+	height: 25px;
+	font-size: 16px;
+	line-height: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid #ccc;
+	background-color: white;
+	border-radius: 4px;
+	padding: 0;
+	box-sizing: border-box;
+	cursor: pointer;
+}
