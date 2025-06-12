@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { Button } from '../button/button';
 import styles from './control-panel.module.css';
 
-export const ControlPanel = () => {
+export const ControlPanel = ({ onTodoAdd }) => {
 	const [searchPhrase, setSearchPhrase] = useState('');
 	const [isSortingEnabled, setIsSortingEnabled] = useState(false);
 
@@ -12,7 +13,7 @@ export const ControlPanel = () => {
 	const onSortingChange = ({ target }) => {
 		setIsSortingEnabled(target.checked);
 	};
-	const onTodoAdd = () => {};
+
 	return (
 		<div className={styles.controlPanel}>
 			<input
@@ -28,9 +29,7 @@ export const ControlPanel = () => {
 				checked={isSortingEnabled}
 				onChange={onSortingChange}
 			/>
-			<button className={styles.addButton} onClick={onTodoAdd}>
-				✚
-			</button>
+			<button onClick={onTodoAdd}>✚</button>
 		</div>
 	);
 };
