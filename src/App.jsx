@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { ControlPanel, Todo } from './components';
 import { createTodo, readTodos, updateTodo, deleteTodo } from './api';
 import { addTodoInTodos, findTodo, removeTodoInTodos, setTodoInTodos } from './utils';
@@ -7,6 +7,9 @@ import { NEW_TODO_ID } from './constants';
 
 export const App = () => {
 	const [todos, setTodos] = useState([]);
+	const [searchPhrase, setSearchPhrase] = useState('');
+	const [isAlphabetSorting, setIsAlphabetSorting] = useState(false);
+
 	const onTodoAdd = () => {
 		setTodos(addTodoInTodos(todos));
 	};
@@ -48,12 +51,18 @@ export const App = () => {
 	};
 
 	useEffect(() => {
-		readTodos().then((loadedTodos) => setTodos(loadedTodos.reverse()));
-	}, []);
+		readTodos(searchPhrase, isAlphabetSorting).then((loadedTodos) =>
+			setTodos(loadedTodos),
+		);
+	}, [searchPhrase, isAlphabetSorting]);
 
 	return (
 		<div className={styles.app}>
-			<ControlPanel onTodoAdd={onTodoAdd} />
+			<ControlPanel
+				onTodoAdd={onTodoAdd}
+				onSearch={setSearchPhrase}
+				onSorting={setIsAlphabetSorting}
+			/>
 			<div>
 				{todos.map(({ id, title, completed, isEditing = false }) => (
 					<Todo

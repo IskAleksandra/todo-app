@@ -4,13 +4,3 @@
 	height: 40px;
 	padding: 10px;
 }
-.search {
-	width: 100%;
-}
-.sortingButton {
-	width: 23px;
-	height: 23px;
-	display: flex;
-	justify-content: center;
-	margin: 0 10px;
-}

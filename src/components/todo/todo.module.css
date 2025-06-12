@@ -1,7 +1,10 @@
 .todo {
 	display: flex;
 	padding: 10px;
-	border-bottom: 1 px solid #bbb;
+	border-bottom: 1px solid #bbb;
+}
+.todo:lastchild {
+	border: none;
 }
 .checkbox {
 	width: 20px;
