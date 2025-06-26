@@ -3,7 +3,7 @@
     {
       "id": 0,
       "title": "Первое дело 2",
-      "completed": false
+      "completed": true
     },
     {
       "id": 1,
@@ -11,9 +11,14 @@
       "completed": true
     },
     {
-      "title": "AAAAA",
+      "title": "Дело номер 33",
       "completed": false,
       "id": 2
+    },
+    {
+      "title": "Новое дело, которое не помещается на одной строчке из-за своей длины.",
+      "completed": false,
+      "id": 3
     }
   ]
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '../../../button/button';
+import { Button } from '../../../../components/button/button';
 import styles from './search.module.css';
 
 export const Search = ({ onSearch }) => {
