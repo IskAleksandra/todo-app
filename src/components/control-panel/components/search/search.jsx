@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { AppContext } from '../../../../context/app-context';
 import { Button } from '../../../button/button';
 import styles from './search.module.css';
 
-export const Search = ({ onSearch }) => {
+export const Search = () => {
 	const [value, setValue] = useState('');
+	const { setSearchPhrase } = useContext(AppContext);
+
 	const onChange = ({ target }) => setValue(target.value);
 	const onSubmit = (event) => {
 		event.preventDefault();
-		onSearch(value);
+		setSearchPhrase(value);
 	};
 	return (
 		<form className={styles.search} onSubmit={onSubmit}>
