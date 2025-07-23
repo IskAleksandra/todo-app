@@ -1,7 +1,7 @@
 import { HTTP_METHOD } from '../constants';
 
 const fetchServer = (method, { id, ...payload } = {}) => {
-	let url = `http://localhost:3002/todos`;
+	let url = `http://localhost:4000/todos`;
 	let options = {
 		method,
 		headers: { 'Content-Type': 'application/json' },

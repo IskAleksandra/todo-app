@@ -1,17 +1,21 @@
-import { useContext } from 'react';
-import { AppContext } from '../../context/app-context';
+import { useDispatch } from 'react-redux';
 import { Button } from '../button/button';
 import { Search, Sorting } from './components';
+import { createTodoAsync } from '../../actions/create-todo-async';
 import styles from './control-panel.module.css';
 
 export const ControlPanel = () => {
-	const { onTodoAdd } = useContext(AppContext);
+	const dispatch = useDispatch();
+
+	const handleAddTodo = () => {
+		dispatch(createTodoAsync());
+	};
+
 	return (
 		<div className={styles.controlPanel}>
 			<Search />
 			<Sorting />
-
-			<Button onClick={onTodoAdd}>✚</Button>
+			<Button onClick={handleAddTodo}>✚</Button>
 		</div>
 	);
 };

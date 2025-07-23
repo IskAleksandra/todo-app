@@ -1,85 +1,77 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ControlPanel, Todo } from './components';
-import { createTodo, readTodos, updateTodo, deleteTodo } from './api';
-import { addTodoInTodos, findTodo, removeTodoInTodos, setTodoInTodos } from './utils';
+import { selectTodos, selectSearchPhrase, selectIsAlphabetSorting } from './selectors';
+import { readTodosAsync } from './actions';
+import { updateTodoAsync, deleteTodoAsync } from './actions';
+import { ACTION_TYPE } from './actions/action-type';
 import styles from './App.module.css';
-import { NEW_TODO_ID } from './constants';
-import { AppContext } from './context/app-context';
 
 export const App = () => {
-	const [todos, setTodos] = useState([]);
-	const [searchPhrase, setSearchPhrase] = useState('');
-	const [isAlphabetSorting, setIsAlphabetSorting] = useState(false);
+	const todos = useSelector(selectTodos);
+	const searchPhrase = useSelector(selectSearchPhrase);
+	const isAlphabetSorting = useSelector(selectIsAlphabetSorting);
+	const dispatch = useDispatch();
 
-	const onTodoAdd = () => {
-		setTodos(addTodoInTodos(todos));
-	};
-
-	const onTodoSave = (todoId) => {
-		const { title, completed } = findTodo(todos, todoId) || {};
-		if (todoId === NEW_TODO_ID) {
-			createTodo({ title, completed }).then((todo) => {
-				let updatedTodos = setTodoInTodos(todos, {
-					id: NEW_TODO_ID,
-					isEditing: false,
-				});
-				updatedTodos = removeTodoInTodos(updatedTodos, NEW_TODO_ID);
-				updatedTodos = addTodoInTodos(updatedTodos, todo);
-
-				setTodos(updatedTodos);
-			});
-		} else {
-			updateTodo({ id: todoId, title }).then(() => {
-				setTodos(setTodoInTodos(todos, { id: todoId, isEditing: false }));
-			});
-		}
-	};
+	useEffect(() => {
+		dispatch(readTodosAsync(searchPhrase, isAlphabetSorting));
+	}, [dispatch, searchPhrase, isAlphabetSorting]);
 
 	const onTodoEdit = (id) => {
-		setTodos(setTodoInTodos(todos, { id, isEditing: true }));
-	};
-	const onTodoTitleChange = (id, newTitle) => {
-		setTodos(setTodoInTodos(todos, { id, title: newTitle }));
-	};
-	const onTodoCompletedChange = (id, newCompleted) => {
-		updateTodo({ id, completed: newCompleted }).then(() => {
-			setTodos(setTodoInTodos(todos, { id, completed: newCompleted }));
+		dispatch({
+			type: ACTION_TYPE.EDIT_TODO,
+			payload: { id, isEditing: true },
 		});
 	};
 
-	const onTodoRemove = (id) => {
-		deleteTodo(id).then(() => setTodos(removeTodoInTodos(todos, id)));
+	const onTodoTitleChange = (id, newTitle) => {
+		dispatch({
+			type: ACTION_TYPE.UPDATE_TODO,
+			payload: { id, title: newTitle },
+		});
 	};
 
-	useEffect(() => {
-		readTodos(searchPhrase, isAlphabetSorting).then((loadedTodos) =>
-			setTodos(loadedTodos),
+	const onTodoSave = (id) => {
+		const todo = todos.find((t) => t.id === id);
+		if (!todo) return;
+		dispatch(
+			updateTodoAsync({
+				id,
+				title: todo.title,
+				completed: todo.completed,
+				isEditing: false,
+			}),
 		);
-	}, [searchPhrase, isAlphabetSorting]);
+	};
+
+	const onTodoCompletedChange = (id, newCompleted) => {
+		dispatch(updateTodoAsync({ id, completed: newCompleted }));
+	};
+
+	const onTodoRemove = (id) => {
+		dispatch(deleteTodoAsync(id));
+	};
 
 	return (
-		<AppContext.Provider value={{ setSearchPhrase, setIsAlphabetSorting, onTodoAdd }}>
-			<div className={styles.app}>
-				<ControlPanel />
-				<div>
-					{todos.map(({ id, title, completed, isEditing = false }) => (
-						<Todo
-							key={id}
-							id={id}
-							title={title}
-							completed={completed}
-							isEditing={isEditing}
-							onEdit={() => onTodoEdit(id)}
-							onTitleChange={(newTitle) => onTodoTitleChange(id, newTitle)}
-							onCompletedChange={(newCompleted) =>
-								onTodoCompletedChange(id, newCompleted)
-							}
-							onSave={() => onTodoSave(id)}
-							onRemove={() => onTodoRemove(id)}
-						/>
-					))}
-				</div>
+		<div className={styles.app}>
+			<ControlPanel />
+			<div>
+				{todos.map(({ id, title, completed, isEditing = false }) => (
+					<Todo
+						key={id}
+						title={title}
+						completed={completed}
+						isEditing={isEditing}
+						onEdit={() => onTodoEdit(id)}
+						onSave={() => onTodoSave(id)}
+						onRemove={() => onTodoRemove(id)}
+						onTitleChange={(value) => onTodoTitleChange(id, value)}
+						onCompletedChange={(checked) =>
+							onTodoCompletedChange(id, checked)
+						}
+					/>
+				))}
 			</div>
-		</AppContext.Provider>
+		</div>
 	);
 };
